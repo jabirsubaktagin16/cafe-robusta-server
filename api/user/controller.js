@@ -1,14 +1,16 @@
 const User = require("./user");
 const jwt = require("jsonwebtoken");
 
-const userAuthorization = async (body) => {
-  const user = new User(body);
-  const filter = { email: body.email };
-  const options = { upsert: true };
+const userAuthorization = (body) => {
+  const options = { upsert: true, new: true };
   const updateDoc = {
-    $set: user,
+    $set: body,
   };
-  const result = await User.findOneAndUpdate(filter, options, updateDoc);
+  const result = User.findOneAndUpdate(
+    { email: body.email },
+    updateDoc,
+    options
+  );
   const token = jwt.sign(
     { email: body.email },
     process.env.ACCESS_TOKEN_SECRET,
@@ -19,4 +21,29 @@ const userAuthorization = async (body) => {
   return { result, token };
 };
 
-module.exports = { userAuthorization };
+const findUserByEmail = (email) => User.find({ email: email });
+
+const updateUser = (body) => {
+  const user = new User(body);
+  return User.updateOne(
+    { _id: body._id },
+    {
+      $set: {
+        email: user.email,
+        location: user.location,
+        occupation: user.occupation,
+        img: user.img,
+        name: user.name,
+      },
+    }
+  );
+};
+
+const findAllUsers = () => User.find().toArray();
+
+module.exports = {
+  userAuthorization,
+  findUserByEmail,
+  updateUser,
+  findAllUsers,
+};
