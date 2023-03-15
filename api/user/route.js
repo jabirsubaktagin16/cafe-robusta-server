@@ -9,12 +9,21 @@ route.use(cors());
 route.use(express.json());
 
 // Token Generate and Store User Email in Database
-route.put("/:email", async (req, res) => {
+route.get("/jwt", async (req, res) => {
   try {
-    const data = await UserController.userAuthorization(req.body);
+    const data = await UserController.jwtGenerate(req.body);
     res.status(200).send({ response: data });
   } catch (err) {
     res.status(400).send({ response: err.message });
+  }
+});
+
+route.post("/users", async (req, res) => {
+  try {
+    const data = await UserController.createUser(req.body);
+    res.status(201).send({ response: data });
+  } catch (err) {
+    res.status(500).send({ response: err.message });
   }
 });
 
@@ -41,6 +50,15 @@ route.get("/", verifyJWT, verifyAdmin, async (req, res) => {
   try {
     const users = await UserController.findAllUsers();
     res.status(200).send({ response: users });
+  } catch (err) {
+    res.status(400).send({ response: err.message });
+  }
+});
+
+route.get("/admin/:email", async (req, res) => {
+  try {
+    const adminCheck = await UserController.checkAdmin(req.body);
+    res.status(200).send({ response: adminCheck });
   } catch (err) {
     res.status(400).send({ response: err.message });
   }

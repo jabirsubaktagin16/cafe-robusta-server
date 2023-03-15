@@ -1,5 +1,7 @@
 const Food = require("./food");
 
+const getAllFoods = () => Food.find();
+
 const getFoodByCategory = (categoryName) =>
   Food.find({ category: categoryName });
 
@@ -28,6 +30,7 @@ const createFood = (body) => {
 };
 
 module.exports = {
+  getAllFoods,
   getFoodByCategory,
   deleteFood,
   updateFood,

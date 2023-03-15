@@ -2,19 +2,20 @@ const express = require("express");
 const cors = require("cors");
 const route = express();
 const FoodController = require("./controller");
+const { verifyJWT, verifyAdmin } = require("../middleware/auth");
 
 //Middleware
 route.use(cors());
 route.use(express.json());
 
-/* route.get("/", auth, async (req, res) => {
+route.get("/manageMenu", verifyJWT, verifyAdmin, async (req, res) => {
   try {
-    const a = await FoodController.getMovieByUserID(req.body.user_id);
-    res.status(200).send(a);
-  } catch (e) {
-    res.status(400).send(e);
+    const result = await FoodController.getAllFoods();
+    res.status(200).send({ response: result });
+  } catch (err) {
+    res.status(400).send(err.message);
   }
-}); */
+});
 
 route.get("/category/:categoryName", async (req, res) => {
   try {
@@ -26,7 +27,7 @@ route.get("/category/:categoryName", async (req, res) => {
   }
 });
 
-route.post("/", async (req, res) => {
+route.post("/", verifyJWT, verifyAdmin, async (req, res) => {
   try {
     const data = await FoodController.createFood(req.body);
     res.status(201).send({ response: data });

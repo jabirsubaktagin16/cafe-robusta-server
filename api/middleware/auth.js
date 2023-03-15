@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
 const User = require("../user/user");
+const jwt = require("jsonwebtoken");
 const Food = require("../food/food");
 
 const verifyJWT = (req, res, next) => {
@@ -20,7 +20,7 @@ const verifyJWT = (req, res, next) => {
 // Verify User as Admin
 const verifyAdmin = async (req, res, next) => {
   const requester = req.decoded.email;
-  const requesterAccount = await userCollection.findOne({
+  const requesterAccount = await User.findOne({
     email: requester,
   });
   if (requesterAccount.role === "admin") {
