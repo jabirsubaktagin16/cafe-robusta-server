@@ -25,6 +25,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  contactNo: {
+    type: String,
+  },
 });
 
 const User = mongoose.model("User", userSchema);

@@ -8,7 +8,7 @@ const { verifyJWT, verifyAdmin } = require("../middleware/auth");
 route.use(cors());
 route.use(express.json());
 
-// Token Generate and Store User Email in Database
+/* Token Generate and Store User Email in Database */
 route.get("/jwt", async (req, res) => {
   try {
     const data = await UserController.jwtGenerate(req.body);
@@ -18,6 +18,7 @@ route.get("/jwt", async (req, res) => {
   }
 });
 
+/* Post New User in the database */
 route.post("/users", async (req, res) => {
   try {
     const data = await UserController.createUser(req.body);
@@ -27,6 +28,7 @@ route.post("/users", async (req, res) => {
   }
 });
 
+/* Get User Information by Email */
 route.get("/:email", verifyJWT, async (req, res) => {
   try {
     const email = req.params.email;
@@ -37,6 +39,7 @@ route.get("/:email", verifyJWT, async (req, res) => {
   }
 });
 
+/* Update User Information */
 route.patch("/:id", verifyJWT, async (req, res) => {
   try {
     const data = await UserController.updateUser(req.body);
@@ -46,6 +49,7 @@ route.patch("/:id", verifyJWT, async (req, res) => {
   }
 });
 
+/* Get All User for Admin */
 route.get("/", verifyJWT, verifyAdmin, async (req, res) => {
   try {
     const users = await UserController.findAllUsers();
@@ -55,6 +59,7 @@ route.get("/", verifyJWT, verifyAdmin, async (req, res) => {
   }
 });
 
+/* Checking if the user is Admin */
 route.get("/admin/:email", async (req, res) => {
   try {
     const adminCheck = await UserController.checkAdmin(req.body);

@@ -1,6 +1,5 @@
 const User = require("../user/user");
 const jwt = require("jsonwebtoken");
-const Food = require("../food/food");
 
 const verifyJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
