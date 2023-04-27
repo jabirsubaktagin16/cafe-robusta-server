@@ -7,13 +7,22 @@ const verifyJWT = (req, res, next) => {
     return res.status(401).send({ message: "Unauthorized Access" });
   }
   const token = authHeader.split(" ")[1];
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(403).send({ message: "Forbidden Access" });
-    }
-    req.decoded = decoded;
-    next();
-  });
+  if (!token) {
+    return res
+      .status(401)
+      .send({ message: "Access denied. No token provided." });
+  }
+  try {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      if (err) {
+        return res.status(403).send({ message: "Forbidden Access" });
+      }
+      req.decoded = decoded;
+      next();
+    });
+  } catch (err) {
+    res.status(400).send({ message: "Invalid token." });
+  }
 };
 
 // Verify User as Admin

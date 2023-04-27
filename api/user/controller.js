@@ -1,8 +1,7 @@
 const User = require("./user");
 const jwt = require("jsonwebtoken");
 
-const jwtGenerate = (body) => {
-  const email = body.email;
+const jwtGenerate = (email) => {
   const user = User.findOne({ email: email });
   if (user) {
     const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, {
@@ -39,18 +38,10 @@ const updateUser = (body) => {
 
 const findAllUsers = () => User.find().toArray();
 
-const checkAdmin = (body) => {
-  const email = body.email;
-  const user = User.findOne({ email: email });
-  const isAdmin = user?.role === "admin";
-  return isAdmin;
-};
-
 module.exports = {
   jwtGenerate,
   createUser,
   findUserByEmail,
   updateUser,
   findAllUsers,
-  checkAdmin,
 };

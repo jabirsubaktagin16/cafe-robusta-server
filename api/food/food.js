@@ -15,7 +15,6 @@ const foodSchema = new mongoose.Schema({
   },
   imageURL: {
     type: String,
-    required: true,
   },
   price: {
     type: Number,

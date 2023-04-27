@@ -9,9 +9,9 @@ route.use(cors());
 route.use(express.json());
 
 /* Token Generate and Store User Email in Database */
-route.get("/jwt", async (req, res) => {
+route.get("/jwt/:email", async (req, res) => {
   try {
-    const data = await UserController.jwtGenerate(req.body);
+    const data = await UserController.jwtGenerate(req.params.email);
     res.status(200).send({ response: data });
   } catch (err) {
     res.status(400).send({ response: err.message });
@@ -62,8 +62,10 @@ route.get("/", verifyJWT, verifyAdmin, async (req, res) => {
 /* Checking if the user is Admin */
 route.get("/admin/:email", async (req, res) => {
   try {
-    const adminCheck = await UserController.checkAdmin(req.body);
-    res.status(200).send({ response: adminCheck });
+    const email = req.params.email;
+    const info = await UserController.findUserByEmail(email);
+    const adminCheck = info[0]?.role === "admin";
+    res.status(200).send({ admin: adminCheck });
   } catch (err) {
     res.status(400).send({ response: err.message });
   }

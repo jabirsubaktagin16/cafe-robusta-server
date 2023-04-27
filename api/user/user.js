@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-// const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -11,6 +10,8 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
+    trim: true,
+    lowercase: true,
   },
   location: {
     type: String,
