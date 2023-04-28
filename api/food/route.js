@@ -3,6 +3,7 @@ const cors = require("cors");
 const route = express();
 const FoodController = require("./controller");
 const { verifyJWT, verifyAdmin } = require("../middleware/auth");
+const { ObjectId } = require("mongodb");
 
 //Middleware
 route.use(cors());
@@ -31,6 +32,16 @@ route.post("/", verifyJWT, verifyAdmin, async (req, res) => {
   try {
     const data = await FoodController.createFood(req.body);
     res.status(201).send({ response: data });
+  } catch (err) {
+    res.status(500).send({ response: err });
+  }
+});
+
+route.delete("/manageMenu/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = await FoodController.deleteFood(id);
+    res.status(200).send({ response: data });
   } catch (err) {
     res.status(500).send({ response: err });
   }
